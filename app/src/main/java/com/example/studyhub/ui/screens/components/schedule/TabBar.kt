@@ -8,6 +8,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -37,11 +38,12 @@ fun TabBar(
             )
         }
     ) {
+        val coroutineScope = rememberCoroutineScope()
         days.forEachIndexed { index, day ->
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = {
-                    CoroutineScope(Dispatchers.Main).launch {
+                    coroutineScope.launch {
                         pagerState.animateScrollToPage(index)
                     }
                 },

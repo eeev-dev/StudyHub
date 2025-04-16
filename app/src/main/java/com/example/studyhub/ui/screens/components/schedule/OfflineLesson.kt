@@ -72,7 +72,7 @@ fun OfflineLesson(
             )
             val context = LocalContext.current
 
-            var onPressPermission by remember { mutableStateOf(false) }
+            var onPressPermission by remember { mutableStateOf(true) }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier

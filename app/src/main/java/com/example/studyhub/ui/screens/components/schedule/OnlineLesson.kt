@@ -76,14 +76,13 @@ fun OnlineLesson(
                 .padding(start = 8.dp)
         ) {
             var scale by remember { mutableFloatStateOf(1f) }
-
             val animatedScale by animateFloatAsState(
                 targetValue = scale,
                 animationSpec = tween(durationMillis = 200),
                 label = "scaleAnim"
             )
             val context = LocalContext.current
-            var onPressPermission by remember { mutableStateOf(false) }
+            var onPressPermission by remember { mutableStateOf(true) }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
