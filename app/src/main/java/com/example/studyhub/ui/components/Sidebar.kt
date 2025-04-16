@@ -1,4 +1,4 @@
-package com.example.studyhub.ui.bars
+package com.example.studyhub.ui.components
 
 import com.example.studyhub.R
 import androidx.compose.foundation.background
@@ -49,7 +49,7 @@ fun DrawerContent(
         DrawerItem("Успеваемость", Icons.Default.Star) { onItemSelected("score_screen") }
         DrawerItem("Экзамены", Icons.Default.Done) { onItemSelected("exams_screen") }
         DrawerItem("Практика", Icons.Default.Email) { onItemSelected("practice_screen") }
-        DrawerItem("ВКР", Icons.Default.List) { onItemSelected("VKR_screen") }
+        DrawerItem("ВКР", Icons.Default.List) { onItemSelected("vkr_screen") }
     }
 }
 

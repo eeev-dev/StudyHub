@@ -19,3 +19,8 @@ fun getToday() : String {
 fun String.capitalizeFirstLetter(): String {
     return this.replaceFirstChar { it.uppercase() }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+val shortWeekDays = DayOfWeek.values().map {
+    it.getDisplayName(TextStyle.SHORT, Locale("ru")).capitalizeFirstLetter()
+}.toList().dropLast(2)
