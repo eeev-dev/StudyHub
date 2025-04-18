@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.PressGestureScope
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,9 +55,8 @@ fun OfflineLesson(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .padding(vertical = 6.dp, horizontal = 8.dp)
+            .fillMaxWidth().wrapContentHeight()
+            .padding(horizontal = 8.dp)
     ) {
         Card(
             shape = RoundedCornerShape(8.dp),
@@ -100,16 +101,6 @@ fun OfflineLesson(
                         )
                     }
             ) {
-                Text(
-                    text = lesson.time.take(5),
-                    fontFamily = sansFont,
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically)
-                        .padding(start = 5.dp),
-                    color = Color.White
-                )
                 Text(
                     text = lesson.title,
                     fontFamily = sansFont,
