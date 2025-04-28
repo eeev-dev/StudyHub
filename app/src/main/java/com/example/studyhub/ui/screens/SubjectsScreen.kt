@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SubjectsScreen(navController: NavController) {
-    NavShell(navController, "ВКР") {
+    NavShell(navController, "Дисциплины") {
         Column {
             SubjectItem()
         }

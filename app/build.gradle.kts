@@ -40,6 +40,13 @@ android {
 }
 
 dependencies {
+    //Room
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.compiler)
+
+    //ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel)
+
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

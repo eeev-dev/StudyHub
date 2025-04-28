@@ -1,17 +1,22 @@
 package com.example.studyhub.ui.screens.components.schedule
 
+import android.R.attr.scaleX
+import android.R.attr.scaleY
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -44,14 +49,14 @@ import com.example.studyhub.models.Lesson
 fun OnlineLesson(
     lesson: Lesson,
     onClick: () -> Unit
-    ) {
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .background(Color.White)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(start = 8.dp)
+            .height(IntrinsicSize.Min)
+            .padding(vertical = 6.dp, horizontal = 8.dp)
     ) {
         Image(
             bitmap = ImageBitmap.imageResource(R.drawable.desktop),
@@ -69,7 +74,6 @@ fun OnlineLesson(
             modifier = Modifier
                 .weight(5f)
                 .padding(start = 8.dp)
-                .height(70.dp)
         ) {
             var scale by remember { mutableFloatStateOf(1f) }
             val animatedScale by animateFloatAsState(
@@ -107,6 +111,16 @@ fun OnlineLesson(
                         )
                     }
             ) {
+                Text(
+                    text = lesson.time.take(5),
+                    fontFamily = sansFont,
+                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 5.dp),
+                    color = Color.White
+                )
                 Text(
                     text = lesson.title,
                     fontFamily = sansFont,

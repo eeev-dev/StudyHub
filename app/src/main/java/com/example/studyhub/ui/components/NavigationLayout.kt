@@ -56,9 +56,7 @@ fun NavShell(
 
         Scaffold(
             topBar = {
-                Appbar(appBarText, appBarExtraIconResource) {
-                    scope.launch { drawerState.open() }
-                }
+                Appbar(appBarText, appBarExtraIconResource) { scope.launch { drawerState.open() } }
             },
             content = { padding ->
                 Box(

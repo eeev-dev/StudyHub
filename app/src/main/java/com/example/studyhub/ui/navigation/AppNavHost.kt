@@ -19,7 +19,7 @@ import com.example.studyhub.ui.screens.VKRScreen
 fun AppNavHost(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "schedule_screen") {
+    NavHost(navController = navController, startDestination = "homework_screen") {
         composable("schedule_screen") { ScheduleScreen(navController) }
         composable("subjects_screen") { SubjectsScreen(navController) }
         composable("homework_screen") { PlansScreen(navController) }
