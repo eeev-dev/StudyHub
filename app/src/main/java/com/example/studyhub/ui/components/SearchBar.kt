@@ -1,7 +1,6 @@
 package com.example.studyhub.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,7 +22,7 @@ fun SearchBar(
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val darkBlue = colorResource(R.color.dark_blue)
+    val darkBlue = colorResource(R.color.blue)
 
     TextField(
         value = query,

@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.example.studyhub.R
-import com.example.studyhub.ui.components.NavShell
+import com.example.studyhub.ui.navigation.NavShell
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

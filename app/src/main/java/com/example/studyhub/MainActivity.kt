@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.studyhub.ui.navigation.AppNavHost
+import com.example.studyhub.navigation.AppNavHost
 import com.example.studyhub.ui.theme.StudyHubTheme
 
 class MainActivity : ComponentActivity() {

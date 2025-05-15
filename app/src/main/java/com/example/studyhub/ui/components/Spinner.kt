@@ -89,7 +89,7 @@ fun Spinner() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .background(colorResource(R.color.dark_blue))
+                    .background(colorResource(R.color.blue))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

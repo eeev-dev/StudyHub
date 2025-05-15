@@ -39,7 +39,15 @@ android {
     }
 }
 
+configurations.all {
+    exclude(group = "com.intellij", module = "annotations")
+}
+
 dependencies {
+    //Retofit
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.converter.gson)
+
     //Room
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.compiler)

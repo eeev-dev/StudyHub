@@ -2,13 +2,10 @@ package com.example.studyhub.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -16,34 +13,24 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.studyhub.R
-import com.example.studyhub.ui.components.NavShell
-import com.example.studyhub.models.Lesson
-import com.example.studyhub.ui.screens.components.schedule.DetailsCard
-import com.example.studyhub.ui.screens.components.schedule.OfflineLesson
-import com.example.studyhub.ui.screens.components.schedule.OnlineLesson
-import com.example.studyhub.ui.screens.components.schedule.TabBar
-import com.example.studyhub.models.schedule
-import com.example.studyhub.models.subjects
-import com.example.studyhub.ui.components.AppBarExtraIcon
+import com.example.studyhub.ui.navigation.NavShell
+import com.example.studyhub.data.local.model.Lesson
+import com.example.studyhub.ui.screens.schedule.components.DetailsCard
+import com.example.studyhub.ui.screens.schedule.components.OfflineLesson
+import com.example.studyhub.ui.screens.schedule.components.OnlineLesson
+import com.example.studyhub.ui.screens.schedule.components.TabBar
+import com.example.studyhub.data.local.model.schedule
+import com.example.studyhub.data.local.model.subjects
 import com.example.studyhub.utils.getToday
 import com.example.studyhub.utils.shortWeekDays
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
