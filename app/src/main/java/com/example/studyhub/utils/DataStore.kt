@@ -1,4 +1,4 @@
-package com.example.practiceplacement.utils
+package com.example.studyhub.utils
 
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
@@ -13,7 +13,7 @@ object PrefKeys {
     val HEAD_TEACHER = stringPreferencesKey("head_teacher")
     val SUPERVISOR = stringPreferencesKey("supervisor")
     val PLACE = stringPreferencesKey("place")
-    val ID = stringPreferencesKey("intern_id")
+    val ID = stringPreferencesKey("student_id")
     val IS_LOGIN = stringPreferencesKey("is_login")
     val TOPIC = stringPreferencesKey("topic")
 }

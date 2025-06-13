@@ -1,5 +1,8 @@
 package com.example.studyhub.ui.screens.practice.components
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.createFontFamilyResolver
@@ -25,42 +29,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studyhub.R
+import com.example.studyhub.ui.screens.exam.BlueRectangularButton
 import com.example.studyhub.ui.theme.sansFont
+import java.io.File
 
 @Composable
 fun LoadFile(
-    // onClick: () -> Unit
+    title: String,
+    onClick: (File) -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .border(
-                width = 1.dp,
-                color = colorResource(R.color.border_for_card),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .background(Color.White)
-            .fillMaxWidth()
-            .padding(12.dp)
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.file_text),
-                contentDescription = "Выход",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { }
-                    )
-            )
-            Text(
-                text = "Загрузить файл",
-                fontFamily = sansFont,
-                fontSize = 20.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            val inputStream = context.contentResolver.openInputStream(it)
+            val tempFile = File.createTempFile("upload_", ".jpg", context.cacheDir)
+            inputStream?.use { input ->
+                tempFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            onClick(tempFile)
         }
-
     }
+    BlueRectangularButton(title) { launcher.launch("image/*") }
 }

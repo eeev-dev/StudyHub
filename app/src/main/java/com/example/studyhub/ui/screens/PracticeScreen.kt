@@ -1,6 +1,7 @@
 package com.example.studyhub.ui.screens
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,10 +54,13 @@ import com.example.studyhub.ui.navigation.NavShell
 import com.example.studyhub.ui.screens.components.Message
 import com.example.studyhub.ui.screens.practice.components.SendConfirmation
 import com.example.studyhub.ui.screens.practice.tabs.company.CompanyItem
+import com.example.studyhub.ui.screens.practice.tabs.review.RatingBar
 import com.example.studyhub.ui.screens.vkr.components.Subject
 import com.example.studyhub.ui.screens.vkr.components.Supervisor
 import com.example.studyhub.ui.theme.sansFont
 import com.example.studyhub.utils.convertGmtToLocal
+import com.example.studyhub.utils.copyToDownloads
+import com.example.studyhub.utils.openFile
 import com.example.studyhub.viewmodels.practice.PracticeViewModel
 import com.example.studyhub.viewmodels.vkr.VkrViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -62,6 +68,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -69,29 +76,67 @@ fun PracticeScreen(
     navController: NavController,
     viewModel: PracticeViewModel = hiltViewModel()
 ) {
-    var text by rememberSaveable { mutableStateOf("") }
     var dialogState by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    var text by remember { mutableStateOf("") }
 
     if (dialogState) {
+        var rating by remember { mutableIntStateOf(0) }
         SendConfirmation(
             onClose = { dialogState = false },
             onClick = {
-                viewModel.saveTopic(text)
-                viewModel.postTopic(text)
-                dialogState = false
-            }
-        ) {
-            ClipboardTextField(
-                value = text,
-                label = "Название темы",
-                onValueChange = { text = it }
-            )
-        }
+                if (rating == 0 || text.isEmpty()) Toast.makeText(
+                    context,
+                    "Нужно заполнить все",
+                    Toast.LENGTH_SHORT
+                ).show()
+                else if (text.length >= 1000) Toast.makeText(
+                    context,
+                    "Отзыв должен быть не длиннее 1000 символов",
+                    Toast.LENGTH_SHORT
+                ).show()
+                else {
+                    viewModel.intern?.let { intern ->
+                        if (intern.place_id != null) {
+                            viewModel.sendReview(
+                                rating,
+                                text,
+                                LocalDate.now().toString(),
+                                intern.place_id
+                            )
+                        }
+                    }
+                    dialogState = false
+                }
+            },
+            content = {
+                Column {
+                    Column(
+                        modifier = Modifier.weight(1f, fill = false)
+                    ) {
+                        RatingBar(
+                            rating,
+                            onRatingChanged = { newRating ->
+                                rating = newRating
+                            }
+                        )
+
+                        ClipboardTextField(
+                            value = text,
+                            label = "Вставьте отзыв",
+                            onValueChange = { text = it }
+                        )
+
+                        Spacer(Modifier.height(12.dp))
+                    }
+                }
+            })
     }
 
     val isRefreshing = viewModel.isRefreshing.value
 
-    NavShell(navController, "Диплом", onExit = {
+    NavShell(navController, "Практика", onExit = {
         viewModel.logout()
         navController.navigate("login_screen") {
             popUpTo(navController.currentDestination?.id ?: 0) {
@@ -104,7 +149,7 @@ fun PracticeScreen(
             state = rememberSwipeRefreshState(isRefreshing),
             onRefresh = { viewModel.refresh() }
         ) {
-            if (viewModel.graduate == null && viewModel.saved == null) {
+            if (viewModel.intern == null) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
@@ -115,76 +160,85 @@ fun PracticeScreen(
                         .background(Color.White)
                         .padding(horizontal = 12.dp)
                 ) {
-                    LazyColumn(Modifier.fillMaxSize()) {
-                        item {
-                            Spacer(Modifier.height(12.dp))
-                        }
-                        item {
-                            viewModel.saved?.let{ saved ->
-                                Supervisor(
-                                    "Научный руководитель",
-                                    saved.supervisor,
-                                    isText = true
-                                )
-                                Spacer(Modifier.height(17.dp))
-                                Subject(
-                                    "Тема",
-                                    saved.topic,
-                                    isText = true
-                                )
+                    viewModel.intern?.let { intern ->
+                        LazyColumn(Modifier.fillMaxSize()) {
+                            item {
+                                Spacer(Modifier.height(12.dp))
                             }
-                            viewModel.graduate?.let { graduate ->
-                                graduate.message?.let {
-                                    if (graduate.message != "") Message(graduate.message)
+                            item {
+                                intern.message?.let {
+                                    if (intern.message != "") Message(intern.message)
                                 }
-                                if (graduate.status == "Без заявки" || graduate.status == "Ожидает подтверждения") {
-                                    Deadline(convertGmtToLocal(graduate.supervisor_deadline))
+                                if (intern.status == "Без заявки" || intern.status == "Ожидает подтверждения") {
+                                    Deadline(convertGmtToLocal(intern.deadline))
                                     Spacer(Modifier.height(17.dp))
                                 }
-                                if (graduate.status == "Подтвержден" || graduate.status == "Ожидает проверки") {
-                                    Deadline(convertGmtToLocal(graduate.topic_deadline))
-                                    Spacer(Modifier.height(17.dp))
-                                }
-                                if (graduate.status == "Без заявки") {
-                                    Supervisor(
-                                        "Научный руководитель",
-                                        "Выбрать"
-                                    ) { navController.navigate("supervisor_screen") }
-                                } else {
-                                    Supervisor(
-                                        "Научный руководитель",
-                                        graduate.supervisor ?: "",
-                                        if (graduate.status == "Ожидает подтверждения" || graduate.status == "Выбор кафедры") graduate.status else null,
-                                        true
-                                    ) {
-                                        if (graduate.status == "Ожидает подтверждения") navController.navigate(
-                                            "supervisor_screen"
-                                        )
-                                    }
-                                }
+                                Supervisor(
+                                    "Руководитель практики",
+                                    intern.head_teacher,
+                                    isText = true
+                                )
                                 Spacer(Modifier.height(17.dp))
-                                if (!(graduate.status == "Без заявки" || graduate.status == "Ожидает подтверждения" || graduate.status == "Выбор кафедры")) {
-                                    if (graduate.status == "Подтвержден") {
-                                        Subject(
-                                            "Тема",
-                                            "Отправить"
-                                        ) { dialogState = true }
-                                    } else {
-                                        Subject(
-                                            "Тема",
-                                            graduate.topic ?: "",
-                                            if (graduate.status == "Ожидает проверки") graduate.status else null,
-                                            true
-                                        ) {
-                                            if (graduate.status == "Ожидает проверки") dialogState =
-                                                true
+                                when (intern.status) {
+                                    "Подтвержден" -> Subject(
+                                        "Предприятие",
+                                        intern.place ?: "",
+                                        isText = true
+                                    )
+
+                                    "Ожидает подтверждения" -> Subject(
+                                        "Предприятие",
+                                        intern.place ?: "",
+                                        intern.status,
+                                        true
+                                    ) { navController.navigate("selection_screen") }
+
+                                    "Без заявки" -> Subject(
+                                        "Предприятие",
+                                        "Выбрать"
+                                    ) { navController.navigate("selection_screen") }
+
+                                    "Выбор кафедры" -> Subject(
+                                        "Предприятие",
+                                        "",
+                                        intern.status,
+                                        true
+                                    )
+                                }
+                            }
+                            item {
+                                Spacer(Modifier.height(12.dp))
+                            }
+                        }
+                        if (intern.status != "Выбор кафедры") {
+                            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                                Column {
+                                    if (intern.status != "Подтвержден") {
+                                        BlueRectangularButton("Свое место практики") {
+                                            navController.navigate("letter_screen")
                                         }
                                     }
+                                    Spacer(Modifier.height(12.dp))
+                                    if (intern.status == "Подтвержден") {
+                                        if (intern.place != "Свое место практики") {
+                                            BlueRectangularButton("Оставить отзыв") {
+                                                dialogState = true
+                                            }
+                                        }
+                                        Spacer(Modifier.height(12.dp))
+                                        BlueRectangularButton("Шаблон недельного отчета") {
+                                            openFile(
+                                                context,
+                                                copyToDownloads(
+                                                    context,
+                                                    "Шаблон отчета.docx"
+                                                )
+                                            )
+                                        }
+                                        Spacer(Modifier.height(12.dp))
+                                    }
                                 }
                             }
-                        }
-                        item {
-                            Spacer(Modifier.height(12.dp))
                         }
                     }
                 }

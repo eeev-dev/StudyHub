@@ -3,8 +3,6 @@ package com.example.studyhub.ui.screens
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.LinearProgressIndicator
@@ -18,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.studyhub.R
-import com.example.studyhub.viewmodels.PreviewViewModel
+import com.example.studyhub.viewmodels.login.PreviewViewModel
 import kotlinx.coroutines.delay
 
 @Composable
@@ -40,7 +38,7 @@ fun PreviewScreen(
 
     if (viewModel.response != null) {
         if (viewModel.isLogin)
-            navController.navigate("vkr_screen") {
+            navController.navigate("practice_screen") {
                 popUpTo(navController.currentDestination?.id ?: 0) {
                     inclusive = true
                 }
@@ -76,7 +74,7 @@ fun PreviewScreen(
             } else Toast.makeText(context, "Сервер недоступен, попробуйте зайти позже", Toast.LENGTH_SHORT).show()
         } else {
             if (viewModel.isLogin) {
-                navController.navigate("vkr_screen") {
+                navController.navigate("practice_screen") {
                     popUpTo(navController.currentDestination?.id ?: 0) {
                         inclusive = true
                     }

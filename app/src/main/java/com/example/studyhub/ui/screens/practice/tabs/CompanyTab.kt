@@ -40,7 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studyhub.R
 import com.example.studyhub.data.remote.models.Place
+import com.example.studyhub.ui.components.BlueRectangularButton
+import com.example.studyhub.ui.screens.practice.tabs.company.ExpandableCard
 import com.example.studyhub.ui.screens.practice.tabs.company.InfoItem
+import com.example.studyhub.ui.screens.practice.tabs.company.ProgressBar
 import com.example.studyhub.ui.theme.sansFont
 
 @Composable
@@ -51,27 +54,32 @@ fun CompanyTab(place: Place) {
             .padding(start = 12.dp, end = 12.dp)
     ) {
         item {
+            ProgressBar(place.max_places, place.max_places - place.places)
+        }
+        item {
             Spacer(modifier = Modifier.height(6.dp).background(Color.Transparent))
         }
         item {
-            InfoItem(
+            ExpandableCard(
                 R.drawable.user_check,
                 "Требования",
-                place.requirements
+                if (place.requirements == "") "Нет требований" else place.requirements
             )
         }
-        item {
-            InfoItem(
-                R.drawable.zap,
-                "Перспективы",
-                place.outlook
-            )
+        if (place.outlook != "") {
+            item {
+                ExpandableCard(
+                    R.drawable.zap,
+                    "Перспективы",
+                    place.outlook
+                )
+            }
         }
         item {
-            InfoItem(
+            ExpandableCard(
                 R.drawable.phone,
                 "Контакты",
-                place.contacts
+                if (place.contacts == "") "Нет контактов" else place.contacts
             )
         }
         item {

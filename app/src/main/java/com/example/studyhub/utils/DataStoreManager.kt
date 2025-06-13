@@ -2,18 +2,9 @@ package com.example.studyhub.utils
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
-import com.example.practiceplacement.utils.PrefKeys
-import com.example.practiceplacement.utils.dataStore
 import kotlinx.coroutines.flow.first
 
 class DataStoreManager(private val context: Context) {
-
-    suspend fun saveAfterConfirm(place: String) {
-        context.dataStore.edit { prefs ->
-            prefs[PrefKeys.STATUS] = "Подтвержден"
-            prefs[PrefKeys.PLACE] = place
-        }
-    }
 
     suspend fun saveAfterLogin(id: String, isLogin: Boolean) {
         context.dataStore.edit { prefs ->
@@ -22,16 +13,10 @@ class DataStoreManager(private val context: Context) {
         }
     }
 
-    suspend fun clearData() {
-        context.dataStore.edit { prefs ->
-            prefs.remove(PrefKeys.ID)
-            prefs.remove(PrefKeys.IS_LOGIN)
-            prefs.remove(PrefKeys.PLACE)
-            prefs.remove(PrefKeys.HEAD_TEACHER)
-            prefs.remove(PrefKeys.STATUS)
-            prefs.remove(PrefKeys.SUPERVISOR)
-            prefs.remove(PrefKeys.TOPIC)
-        }
+    suspend fun getId(): Int {
+        val prefs = context.dataStore.data.first()
+        val idString = prefs[PrefKeys.ID] ?: return -1
+        return idString.toIntOrNull() ?: -1
     }
 
     suspend fun getLogin(): Boolean {
@@ -40,9 +25,21 @@ class DataStoreManager(private val context: Context) {
         return idString.toIntOrNull() != null
     }
 
+    suspend fun saveTeacher(teacher: String) {
+        context.dataStore.edit { prefs ->
+            prefs[PrefKeys.HEAD_TEACHER] = teacher
+        }
+    }
+
     suspend fun getTeacher(): String {
         val prefs = context.dataStore.data.first()
         return prefs[PrefKeys.HEAD_TEACHER] ?: ""
+    }
+
+    suspend fun saveStatus(status: String) {
+        context.dataStore.edit { prefs ->
+            prefs[PrefKeys.STATUS] = status
+        }
     }
 
     suspend fun getStatus(): String {
@@ -50,15 +47,15 @@ class DataStoreManager(private val context: Context) {
         return prefs[PrefKeys.STATUS] ?: ""
     }
 
+    suspend fun savePlace(place: String) {
+        context.dataStore.edit { prefs ->
+            prefs[PrefKeys.PLACE] = place
+        }
+    }
+
     suspend fun getPlace(): String {
         val prefs = context.dataStore.data.first()
         return prefs[PrefKeys.PLACE] ?: ""
-    }
-
-    suspend fun getId(): Int {
-        val prefs = context.dataStore.data.first()
-        val idString = prefs[PrefKeys.ID] ?: return -1
-        return idString.toIntOrNull() ?: -1
     }
 
     suspend fun getTopic(): String {
@@ -80,6 +77,18 @@ class DataStoreManager(private val context: Context) {
     suspend fun saveSupervisor(supervisor: String) {
         context.dataStore.edit { prefs ->
             prefs[PrefKeys.SUPERVISOR] = supervisor
+        }
+    }
+
+    suspend fun clearData() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(PrefKeys.ID)
+            prefs.remove(PrefKeys.IS_LOGIN)
+            prefs.remove(PrefKeys.PLACE)
+            prefs.remove(PrefKeys.HEAD_TEACHER)
+            prefs.remove(PrefKeys.STATUS)
+            prefs.remove(PrefKeys.SUPERVISOR)
+            prefs.remove(PrefKeys.TOPIC)
         }
     }
 

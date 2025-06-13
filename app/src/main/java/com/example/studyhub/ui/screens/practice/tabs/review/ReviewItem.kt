@@ -1,5 +1,6 @@
 package com.example.studyhub.ui.screens.practice.tabs.review
 
+import android.R
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studyhub.ui.theme.sansFont
@@ -31,7 +33,7 @@ fun ReviewItem(
             .fillMaxWidth()
             .padding(vertical = 6.dp, horizontal = 12.dp)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(10.dp)) {
             Row {
                 RatingBar(rating)
                 Box(
@@ -42,6 +44,7 @@ fun ReviewItem(
                     Text(
                         text = date,
                         fontSize = 16.sp,
+                        color = colorResource(R.color.darker_gray),
                         fontFamily = sansFont,
                         modifier = Modifier.align(Alignment.Center)
                     )

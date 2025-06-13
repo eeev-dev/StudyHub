@@ -1,13 +1,19 @@
 package com.example.studyhub.viewmodels.practice
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.remote.api.intern.InternResponse
+import com.example.studyhub.data.remote.api.intern.ReviewResponse
 import com.example.studyhub.data.remote.api.vkr.GraduateResponse
+import com.example.studyhub.data.remote.repository.intern.InternRepository
+import com.example.studyhub.data.remote.repository.intern.ReviewRepository
 import com.example.studyhub.data.remote.repository.vkr.GraduateRepository
 import com.example.studyhub.utils.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,68 +25,39 @@ import kotlin.onSuccess
 @HiltViewModel
 class PracticeViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
-    private val repository: GraduateRepository
+    private val internRepository: InternRepository,
+    private val reviewRepository: ReviewRepository
 ) : ViewModel() {
     private val dataStoreManager = DataStoreManager(appContext)
 
-    var text by mutableStateOf<String>("")
-        private set
-
-    var graduate by mutableStateOf<GraduateResponse?>(null)
+    var intern by mutableStateOf<InternResponse?>(null)
         private set
 
     var isRefreshing = mutableStateOf(false)
 
     fun refresh() {
         viewModelScope.launch {
-            if (saved == null) {
-                isRefreshing.value = true
-                graduate = null
-                getGraduate()
-                isRefreshing.value = false
-            }
+            isRefreshing.value = true
+            intern = null
+            getIntern()
+            isRefreshing.value = false
         }
     }
-
-    data class Info(
-        var supervisor: String,
-        var topic: String
-    )
-
-    var saved by mutableStateOf<Info?>(null)
-        private set
 
     init {
-        getInfo()
-        getText()
+        getIntern()
     }
 
-    fun getInfo() {
-        viewModelScope.launch {
-            val topic = dataStoreManager.getTopic()
-            val supervisor = dataStoreManager.getSupervisor()
-            if (supervisor != "" && topic != "") {
-                saved = Info(supervisor = supervisor, topic = topic)
-            }
-            else getGraduate()
-        }
-    }
-
-    fun getGraduate() {
+    fun getIntern() {
         viewModelScope.launch {
             val studentId = dataStoreManager.getId()
 
             if (studentId == -1) {
                 Toast.makeText(appContext, "Пользователь не найден", Toast.LENGTH_SHORT).show()
             } else {
-                val result = repository.get(studentId.toString())
+                val result = internRepository.getIntern(studentId)
                 result.onSuccess {
-                    graduate = it
-                    if (it.status == "Проверка пройдена") {
-                        dataStoreManager.saveTopic(it.topic)
-                        dataStoreManager.saveSupervisor(it.supervisor)
-                        graduate = null
-                    }
+                    intern = it
                 }.onFailure {
                     Toast.makeText(
                         appContext,
@@ -92,29 +69,20 @@ class PracticeViewModel @Inject constructor(
         }
     }
 
-    fun getText() {
-        viewModelScope.launch {
-            text = dataStoreManager.getTopic()
-        }
-    }
+    private val _resultReview = MutableLiveData<Result<ReviewResponse>>()
 
-    fun saveTopic(topic: String) {
+    fun sendReview(rating: Int, text: String, date: String, placeId: Int) {
         viewModelScope.launch {
-            dataStoreManager.saveTopic(topic)
-            Toast.makeText(appContext, "Сохранено", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun postTopic(title: String) {
-        viewModelScope.launch {
-            val res = repository.postTopic(dataStoreManager.getId().toString(), title)
+            val res = reviewRepository.sendReview(rating, text, date, placeId)
+            _resultReview.value = res
             res.onSuccess {
-                Toast.makeText(appContext, "Ожидайте подтверждения", Toast.LENGTH_SHORT).show()
-                refresh()
+                val message = it.message
+                Toast.makeText(appContext, "Ответ сервера: $message", Toast.LENGTH_SHORT).show()
+                Log.d("ReviewVM", "Ответ сервера: $message")
             }
             res.onFailure {
                 val message = it.message
-                Toast.makeText(appContext, "Ошибка: $message", Toast.LENGTH_SHORT).show()
+                Toast.makeText(appContext, "Ответ сервера: $message", Toast.LENGTH_SHORT).show()
             }
         }
     }
