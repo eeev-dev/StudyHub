@@ -1,4 +1,7 @@
 pluginManagement {
+    plugins {
+        id("dagger.hilt.android.plugin") version "2.48"
+    }
     repositories {
         google {
             content {
@@ -11,6 +14,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {

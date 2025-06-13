@@ -3,6 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#2957b2</color>
+    <color name="light_blue_track">#B3C7E9</color>
+    <color name="red_message">#FFCDD2</color>
     <color name="red_warning">#C00F0C</color>
     <color name="green_warning">#34c759</color>
     <color name="active_tab">#2F2F2F</color>

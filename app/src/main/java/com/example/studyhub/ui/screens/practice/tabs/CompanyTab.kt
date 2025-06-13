@@ -39,11 +39,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studyhub.R
+import com.example.studyhub.data.remote.models.Place
 import com.example.studyhub.ui.screens.practice.tabs.company.InfoItem
 import com.example.studyhub.ui.theme.sansFont
 
 @Composable
-fun CompanyTab() {
+fun CompanyTab(place: Place) {
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
@@ -56,25 +57,21 @@ fun CompanyTab() {
             InfoItem(
                 R.drawable.user_check,
                 "Требования",
-                "Знание языка HTML и CSS;\n" +
-                        "Знание JavaScript (на уровне внесения правок);\n" +
-                        "Умение работать с графическим пакетом AdobePhotoshop;\n" +
-                        "Умение настраивать web-сервер Apache;\n" +
-                        "Опыт разработки сайтов."
+                place.requirements
             )
         }
         item {
             InfoItem(
                 R.drawable.zap,
                 "Перспективы",
-                "Компания рассматривает возможность одновременного прохождения практики и стажировки"
+                place.outlook
             )
         }
         item {
             InfoItem(
                 R.drawable.phone,
                 "Контакты",
-                ""
+                place.contacts
             )
         }
         item {

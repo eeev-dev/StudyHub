@@ -24,7 +24,8 @@ fun NavShell(
     navController: NavController,
     appBarText: String,
     appBarExtraIconResource: Int = 0,
-    content: @Composable () -> Unit
+    onExit: () -> Unit = {},
+    content: @Composable () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -37,26 +38,26 @@ fun NavShell(
             DrawerContent { selected ->
                 when (selected) {
                     "schedule_screen" -> navController.navigate(selected)
-                    "subjects_screen" -> navController.navigate(selected)
                     "homework_screen" -> navController.navigate(selected)
-                    "score_screen" -> navController.navigate(selected)
+                    "exams_screen" -> navController.navigate(selected)
                     "practice_screen" -> navController.navigate(selected)
                     "vkr_screen" -> navController.navigate(selected)
-                    "exams_screen" -> navController.navigate(selected)
                 }
                 scope.launch { drawerState.close() }
             }
         }
     ) {
-        BackHandler {
-            if (drawerState.isOpen) {
-                scope.launch { drawerState.close() }
+        val scope = rememberCoroutineScope()
+
+        BackHandler(enabled = drawerState.isOpen) {
+            scope.launch {
+                drawerState.close()
             }
         }
 
         Scaffold(
             topBar = {
-                Appbar(appBarText, appBarExtraIconResource) { scope.launch { drawerState.open() } }
+                Appbar(appBarText, appBarExtraIconResource, onExit = onExit) { scope.launch { drawerState.open() } }
             },
             content = { padding ->
                 Box(

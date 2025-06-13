@@ -1,78 +1,170 @@
 package com.example.studyhub.ui.screens
 
 import android.os.Build
-import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.studyhub.R
-import com.example.studyhub.data.remote.ApiClient
-import com.example.studyhub.data.remote.models.PostRequest
+import com.example.studyhub.ui.screens.vkr.components.Subject
+import com.example.studyhub.ui.components.ClipboardTextField
+import com.example.studyhub.ui.components.Deadline
 import com.example.studyhub.ui.navigation.NavShell
-import com.example.studyhub.ui.components.SearchBar
-import com.example.studyhub.ui.navigation.BottomDrawer
-import com.example.studyhub.ui.screens.vkr.components.PostForm
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.studyhub.ui.screens.components.Message
+import com.example.studyhub.ui.screens.practice.components.SendConfirmation
+import com.example.studyhub.ui.screens.vkr.components.Supervisor
+import com.example.studyhub.utils.convertGmtToLocal
+import com.example.studyhub.viewmodels.vkr.VkrViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun VKRScreen(navController: NavController) {
-    val icons = listOf(
-        Pair(R.drawable.info, "Информация"),
-        Pair(R.drawable.users, "Преподаватели"),
-        Pair(R.drawable.search, "Поиск")
-    )
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { icons.size }
-    )
-    NavShell(navController, "ВКР", R.drawable.filter) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column {
-                var searchQuery by remember { mutableStateOf("") }
-                SearchBar(
-                    query = searchQuery,
-                    onQueryChange = { searchQuery = it }
-                )
-                PostForm { teacher, subject, student ->
-                    val post = PostRequest(
-                        teacher = "BBdfyjkdls",
-                        subject = "salkjdlakjsl",
-                        student = "SUHALFJAK"
-                    )
+fun VKRScreen(
+    navController: NavController,
+    viewModel: VkrViewModel = hiltViewModel()
+) {
+    var text by rememberSaveable { mutableStateOf("") }
 
-                    ApiClient.apiService.createPost(post).enqueue(object : Callback<Void> {
-                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                            if (response.isSuccessful) {
-                                Log.d("Retrofit", "Post успешен")
-                            } else {
-                                Log.e("Retrofit", "Ошибка на сервере: ${response.code()}")
+    LaunchedEffect(viewModel.text) {
+        text = viewModel.text
+    }
+
+    var dialogState by remember { mutableStateOf(false) }
+
+    if (dialogState) {
+        SendConfirmation(
+            onClose = { dialogState = false },
+            onClick = {
+                viewModel.saveTopic(text)
+                viewModel.postTopic(text)
+                dialogState = false
+            }
+        ) {
+            ClipboardTextField(
+                value = text,
+                label = "Название темы",
+                onValueChange = { text = it }
+            )
+        }
+    }
+
+    val isRefreshing = viewModel.isRefreshing.value
+
+    NavShell(navController, "Диплом", onExit = {
+        viewModel.logout()
+        navController.navigate("login_screen") {
+            popUpTo(navController.currentDestination?.id ?: 0) {
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
+    }) {
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = { viewModel.refresh() }
+        ) {
+            if (viewModel.graduate == null && viewModel.saved == null) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .padding(horizontal = 12.dp)
+                ) {
+                    LazyColumn(Modifier.fillMaxSize()) {
+                        item {
+                            Spacer(Modifier.height(12.dp))
+                        }
+                        item {
+                            viewModel.saved?.let{ saved ->
+                                Supervisor(
+                                    "Научный руководитель",
+                                    saved.supervisor,
+                                    isText = true
+                                )
+                                Spacer(Modifier.height(17.dp))
+                                Subject(
+                                    "Тема",
+                                    saved.topic,
+                                    isText = true
+                                )
+                            }
+                            viewModel.graduate?.let { graduate ->
+                                graduate.message?.let {
+                                    if (graduate.message != "") Message(graduate.message)
+                                }
+                                if (graduate.status == "Без заявки" || graduate.status == "Ожидает подтверждения") {
+                                    Deadline(convertGmtToLocal(graduate.supervisor_deadline))
+                                    Spacer(Modifier.height(17.dp))
+                                }
+                                if (graduate.status == "Подтвержден" || graduate.status == "Ожидает проверки") {
+                                    Deadline(convertGmtToLocal(graduate.topic_deadline))
+                                    Spacer(Modifier.height(17.dp))
+                                }
+                                if (graduate.status == "Без заявки") {
+                                    Supervisor(
+                                        "Научный руководитель",
+                                        "Выбрать"
+                                    ) { navController.navigate("supervisor_screen") }
+                                } else {
+                                    Supervisor(
+                                        "Научный руководитель",
+                                        graduate.supervisor ?: "",
+                                        if (graduate.status == "Ожидает подтверждения" || graduate.status == "Выбор кафедры") graduate.status else null,
+                                        true
+                                    ) {
+                                        if (graduate.status == "Ожидает подтверждения") navController.navigate(
+                                            "supervisor_screen"
+                                        )
+                                    }
+                                }
+                                Spacer(Modifier.height(17.dp))
+                                if (!(graduate.status == "Без заявки" || graduate.status == "Ожидает подтверждения" || graduate.status == "Выбор кафедры")) {
+                                    if (graduate.status == "Подтвержден") {
+                                        Subject(
+                                            "Тема",
+                                            "Отправить"
+                                        ) { dialogState = true }
+                                    } else {
+                                        Subject(
+                                            "Тема",
+                                            graduate.topic ?: "",
+                                            if (graduate.status == "Ожидает проверки") graduate.status else null,
+                                            true
+                                        ) {
+                                            if (graduate.status == "Ожидает проверки") dialogState =
+                                                true
+                                        }
+                                    }
+                                }
                             }
                         }
-
-                        override fun onFailure(call: Call<Void>, t: Throwable) {
-                            Log.e("Retrofit", "Ошибка запроса: ${t.message}")
+                        item {
+                            Spacer(Modifier.height(12.dp))
                         }
-                    })
-
+                    }
                 }
-            }
-            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                BottomDrawer(icons, pagerState)
             }
         }
     }

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.studyhub.data.remote.models.Place
 import com.example.studyhub.ui.screens.practice.tabs.competition.ProgressBar
 import com.example.studyhub.ui.screens.practice.tabs.competition.StudentItem
 
@@ -20,7 +21,7 @@ data class Student(
 )
 
 @Composable
-fun CompetitionTab() {
+fun CompetitionTab(place: Place) {
     val students = listOf(
         Pair("Абдылдаева К. Л.", 93.7),
         Pair("Мусаев О. Ч.", 90.1),

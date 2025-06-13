@@ -66,7 +66,7 @@ fun ScheduleScreen(
         )
     }
 
-    NavShell(navController, "Расписание", R.drawable.grid) {
+    NavShell(navController, "Расписание") {
         Column {
             TabBar(
                 shortWeekDays,

@@ -1,5 +1,6 @@
-package com.example.studyhub.ui.components
+package com.example.studyhub.ui.screens.vkr.components
 
+import android.net.http.UrlRequest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -49,13 +50,14 @@ fun Failure() {
 }
 
 @Composable
-fun Warning(
+fun Status(
     iconId: Int,
     color: Color,
     text: String
 ) {
-    Box(
+    Row(
         modifier = Modifier
+            .padding(vertical = 5.dp)
             .background(
                 color = color,
                 shape = RoundedCornerShape(percent = 50)
@@ -68,7 +70,47 @@ fun Warning(
             contentDescription = "Иконка",
             modifier = Modifier
                 .padding(horizontal = 2.dp)
-                .align(Alignment.CenterStart)
+        )
+        Box(
+            Modifier
+                .padding(end = 12.dp)
+                .align(Alignment.CenterVertically)
+                .weight(1f)
+        ) {
+            Text(
+                text = text,
+                fontFamily = sansFont,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .align(Alignment.Center),
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun Warning(
+    iconId: Int,
+    color: Color,
+    text: String
+) {
+    Box(
+        modifier = Modifier
+            .padding(vertical = 5.dp)
+            .background(
+                color = color,
+                shape = RoundedCornerShape(percent = 50)
+            )
+            .fillMaxWidth()
+    ) {
+        Icon(
+            ImageVector.vectorResource(iconId),
+            tint = Color.White,
+            contentDescription = "Иконка",
+            modifier = Modifier
+                .padding(horizontal = 2.dp)
         )
         Text(
             text = text,

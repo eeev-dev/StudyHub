@@ -31,6 +31,7 @@ import com.example.studyhub.ui.components.BlueRectangularButton
 fun SendConfirmation(
     onClose: () -> Unit,
     textButton: String = "Подтвердить",
+    onClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Dialog(onDismissRequest = onClose) {
@@ -63,7 +64,7 @@ fun SendConfirmation(
                 Spacer(modifier = Modifier.height(12.dp))
                 content()
                 Spacer(modifier = Modifier.height(12.dp))
-                BlueRectangularButton(textButton) { }
+                BlueRectangularButton(textButton) { onClick() }
             }
         }
     }

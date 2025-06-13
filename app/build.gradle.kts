@@ -2,11 +2,22 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
     namespace = "com.example.studyhub"
     compileSdk = 35
+
+    applicationVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val appName = "StudyHub"
+
+            outputImpl.outputFileName = "$appName.apk"
+        }
+    }
 
     defaultConfig {
         applicationId = "com.example.studyhub"
@@ -39,23 +50,37 @@ android {
     }
 }
 
-configurations.all {
-    exclude(group = "com.intellij", module = "annotations")
-}
+val roomVersion = "2.6.1"
 
 dependencies {
-    //Retofit
-    implementation(libs.retrofit2.retrofit)
-    implementation(libs.converter.gson)
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
 
-    //Room
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.compiler)
+    // Hilt
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
+
+    // Room
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:2.6.1")
+    testImplementation("androidx.room:room-testing:$roomVersion")
+
+    //Retofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
 
     //ViewModel
-    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     implementation(libs.accompanist.systemuicontroller)
+
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.swiperefresh)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,7 +89,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

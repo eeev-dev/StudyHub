@@ -1,6 +1,7 @@
 package com.example.studyhub.ui.screens.practice
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +33,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.studyhub.R
 import com.example.studyhub.ui.navigation.BottomDrawer
@@ -41,54 +44,17 @@ import com.example.studyhub.ui.screens.practice.tabs.ReviewTab
 import com.example.studyhub.ui.screens.practice.tabs.competition.StudentItem
 import com.example.studyhub.ui.theme.sansFont
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AboutScreen(
-    navController: NavController
+    navController: NavController,
+    id: Int
 ) {
-    val icons = listOf(
-        Pair(R.drawable.info, "Информация"),
-        Pair(R.drawable.star, "Отзывы"),
-        Pair(R.drawable.flag, "Подача заявки")
-    )
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { icons.size }
-    )
-    var dialogState by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.background(Color.White)) {
-        if (dialogState) {
-            SendConfirmation({ dialogState = false }) {
-                StudentItem(1, "Туктамышев Э. Л.", 98.0)
-            }
-        }
-        Column(modifier = Modifier.align(Alignment.TopStart)) {
-            Header("Айыл Банк") {
-                dialogState = !dialogState
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(icons.size - 1)
-                }
-            }
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxSize()
-            ) { page ->
-                when (page) {
-                    0 -> CompanyTab()
-                    1 -> ReviewTab()
-                    2 -> CompetitionTab()
-                    else -> CompanyTab()
-                }
-            }
-        }
-        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            BottomDrawer(icons, pagerState)
-        }
-    }
 }
 
 @Composable

@@ -13,14 +13,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studyhub.R
+import com.example.studyhub.data.remote.models.Place
 import com.example.studyhub.ui.components.BlueRectangularButton
 import com.example.studyhub.ui.theme.sansFont
 
 @Composable
 fun CompanyItem(
-    title: String,
-    occupation: String,
-    places: Int,
+    place: Place,
     navigate: () -> Unit
 ) {
     Card(
@@ -31,18 +30,18 @@ fun CompanyItem(
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
-                text = title,
+                text = place.title,
                 fontFamily = sansFont,
                 fontSize = 32.sp
             )
             Text(
-                text = occupation,
+                text = place.occupation,
                 fontFamily = sansFont,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             Text(
-                text = "Мест: $places",
+                text = "Мест: ${place.places}",
                 fontFamily = sansFont,
                 fontSize = 20.sp,
                 color = colorResource(R.color.grey_for_text),

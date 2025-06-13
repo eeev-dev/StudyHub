@@ -24,7 +24,9 @@ import androidx.compose.ui.unit.dp
 import com.example.studyhub.R
 
 @Composable
-fun SettingsMenu() {
+fun SettingsMenu(
+    onExit: () -> Unit
+) {
     var menuExpanded by remember { mutableStateOf(false) }
     val iconSize = 36.dp
 
@@ -60,7 +62,7 @@ fun SettingsMenu() {
                 text = { Text("Выход") },
                 onClick = {
                     menuExpanded = false
-                    // обработка
+                    onExit()
                 }
             )
         }

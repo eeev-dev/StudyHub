@@ -33,6 +33,7 @@ import com.example.studyhub.ui.theme.sansFont
 fun Appbar(
     text: String,
     extraImageResource: Int,
+    onExit: () -> Unit = {},
     onMenuClick: () -> Unit
 ) {
     Box(
@@ -73,7 +74,7 @@ fun Appbar(
                     .width(36.dp)
                     .weight(1f)
             ) { AppBarExtraIcon(extraImageResource) }
-            SettingsMenu()
+            SettingsMenu(onExit)
         }
     }
 }
