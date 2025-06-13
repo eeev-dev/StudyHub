@@ -161,6 +161,7 @@ fun PracticeScreen(
                         .padding(horizontal = 12.dp)
                 ) {
                     viewModel.intern?.let { intern ->
+                        val title = if (intern.place == "Свое место практики") viewModel.title else intern.place
                         LazyColumn(Modifier.fillMaxSize()) {
                             item {
                                 Spacer(Modifier.height(12.dp))
@@ -182,13 +183,13 @@ fun PracticeScreen(
                                 when (intern.status) {
                                     "Подтвержден" -> Subject(
                                         "Предприятие",
-                                        intern.place ?: "",
+                                        title,
                                         isText = true
                                     )
 
                                     "Ожидает подтверждения" -> Subject(
                                         "Предприятие",
-                                        intern.place ?: "",
+                                        title,
                                         intern.status,
                                         true
                                     ) { navController.navigate("selection_screen") }

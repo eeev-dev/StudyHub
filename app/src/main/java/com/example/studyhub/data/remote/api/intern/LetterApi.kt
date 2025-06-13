@@ -10,6 +10,7 @@ interface LetterApi {
     @POST("/intern/letter")
     suspend fun sendLetter(
         @Part image: MultipartBody.Part,
-        @Part("id") internId: Int
+        @Part("id") internId: Int,
+        @Part("title") title: String
     ): Result<InternResponse>
 }

@@ -1,6 +1,7 @@
 package com.example.studyhub.viewmodels.practice
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +18,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
+import kotlin.collections.find
 
 @HiltViewModel
 class LetterViewModel @Inject constructor(
@@ -32,7 +34,20 @@ class LetterViewModel @Inject constructor(
         result = null
     }
 
-    fun sendPlace(imageFile: File) {
+    var text by mutableStateOf<String>("")
+        private set
+
+    init {
+        getText()
+    }
+
+    fun getText() {
+        viewModelScope.launch {
+            text = dataStoreManager.getPlace()
+        }
+    }
+
+    fun sendPlace(title: String, imageFile: File) {
         viewModelScope.launch {
             val internId = dataStoreManager.getId()
             if (internId != -1) {
@@ -44,7 +59,10 @@ class LetterViewModel @Inject constructor(
                         "image", imageFile.name, requestFile
                     )
 
-                    result = api.sendLetter(body, internId)
+                    result = api.sendLetter(body, internId, title)
+                    if (result?.isSuccess ?: false) {
+                        dataStoreManager.savePlace(title)
+                    }
                 } catch (e: Exception) {
                     result = Result.failure(e)
                 }

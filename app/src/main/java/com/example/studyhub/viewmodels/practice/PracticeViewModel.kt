@@ -33,6 +33,9 @@ class PracticeViewModel @Inject constructor(
     var intern by mutableStateOf<InternResponse?>(null)
         private set
 
+    var title by mutableStateOf("")
+        private set
+
     var isRefreshing = mutableStateOf(false)
 
     fun refresh() {
@@ -46,6 +49,13 @@ class PracticeViewModel @Inject constructor(
 
     init {
         getIntern()
+        getPlaceTitle()
+    }
+
+    fun getPlaceTitle() {
+        viewModelScope.launch {
+            title = dataStoreManager.getPlace()
+        }
     }
 
     fun getIntern() {

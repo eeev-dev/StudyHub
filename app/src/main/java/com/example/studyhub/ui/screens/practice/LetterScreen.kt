@@ -19,6 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
@@ -36,6 +40,7 @@ import androidx.navigation.NavController
 import com.example.studyhub.R
 import com.example.studyhub.ui.components.BlueCircularButton
 import com.example.studyhub.ui.components.BlueRectangularButton
+import com.example.studyhub.ui.components.ClipboardTextField
 import com.example.studyhub.ui.navigation.NavShell
 import com.example.studyhub.ui.screens.exam.DownloadFile
 import com.example.studyhub.ui.screens.exam.Frame
@@ -54,6 +59,11 @@ fun LetterScreen(
 ) {
     val context = LocalContext.current
     val result = viewModel.result
+    var text by rememberSaveable { mutableStateOf("") }
+
+    LaunchedEffect(viewModel.text) {
+        text = viewModel.text
+    }
 
     LaunchedEffect(result) {
         result?.onSuccess {
@@ -90,7 +100,7 @@ fun LetterScreen(
                     ExpandableBox(
                         R.drawable.flag,
                         "Инструкция",
-                        "Обратитесь к ответственному сотруднику или руководителю практики на предприятиии. Предоставьте пример письма (см. ниже). Он поможет ответственному лицу оформить официальное письмо. Когда оно бдует готово, отправьте его фото или скан через приложение. Поддерживаемые форматы: jpeg, jpg, png"
+                        "Обратитесь к ответственному сотруднику или руководителю практики на предприятиии. Предоставьте пример письма (см. ниже). Он поможет ответственному лицу оформить официальное письмо. Когда оно будет готово, отправьте название предприятия (название скопируйте из письма) и фото или скан письма через приложение. Поддерживаемые форматы: jpeg, jpg, png"
                     )
                 }
                 item {
@@ -107,12 +117,23 @@ fun LetterScreen(
                     }
                 }
                 item {
-                    Spacer(Modifier.height(60.dp))
+                    Spacer(Modifier.height(12.dp))
                 }
-            }
-            Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                LoadFile("Выбрать файл и отправить") { selectedFile ->
-                    viewModel.sendPlace(selectedFile)
+                item {
+                    ClipboardTextField(
+                        value = text,
+                        label = "Официальное название предприятия",
+                        onValueChange = { text = it }
+                    )
+                }
+                item {
+                    Spacer(Modifier.height(12.dp))
+                }
+                item {
+                    LoadFile("Выбрать файл и отправить") { selectedFile ->
+                        if (text == "") Toast.makeText(context, "Заполните поле", Toast.LENGTH_SHORT).show()
+                        else viewModel.sendPlace(text, selectedFile)
+                    }
                 }
             }
         }
