@@ -29,16 +29,18 @@ import androidx.navigation.NavHostController
 import com.example.studyhub.R
 import com.example.studyhub.data.local.entities.ScheduleEntity
 import com.example.studyhub.ui.navigation.NavShell
-import com.example.studyhub.data.local.model.Lesson
-import com.example.studyhub.data.local.model.convertSchedule
 import com.example.studyhub.ui.screens.schedule.components.DetailsCard
 import com.example.studyhub.ui.screens.schedule.components.OfflineLesson
 import com.example.studyhub.ui.screens.schedule.components.OnlineLesson
 import com.example.studyhub.ui.screens.schedule.components.TabBar
-import com.example.studyhub.data.local.model.subjects
+import com.example.studyhub.data.remote.models.Schedule
+import com.example.studyhub.ui.model.Lesson
+import com.example.studyhub.ui.model.convertSchedule
 import com.example.studyhub.utils.getToday
 import com.example.studyhub.utils.shortWeekDays
 import com.example.studyhub.viewmodels.schedule.ScheduleViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -58,32 +60,21 @@ fun ScheduleScreen(
         )
     }
 
-    var term by rememberSaveable { mutableStateOf<String?>(null) }
-
-    LaunchedEffect(viewModel.term) {
-        term = viewModel.term
-    }
-
-    if (term != null) {
-        viewModel.initSchedule()
-    }
-
     val scheduleList by viewModel.schedule.collectAsState()
 
-    if (scheduleList.isEmpty())  {
+    if (scheduleList.isEmpty()) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
     } else {
         var detailsState by remember { mutableStateOf(false) }
 
-        // Сегодняшний день
         var currentDay by remember { mutableStateOf(getToday()) }
 
         val schedule = convertSchedule(scheduleList)
 
         val pagerState = rememberPagerState(
-            initialPage = shortWeekDays.indexOf(getToday()).coerceAtLeast(0),
+            initialPage = shortWeekDays.indexOf(currentDay).coerceAtLeast(0),
             pageCount = { shortWeekDays.size }
         )
 
@@ -98,13 +89,17 @@ fun ScheduleScreen(
             )
         }
 
-        NavShell(navController, "Расписание", onExit = {
-            viewModel.logout()
-            navController.navigate("login_screen") {
-                popUpTo(navController.currentDestination?.id ?: 0) {
-                    inclusive = true
+        NavShell(navController, "Расписание", onExit = { isExit ->
+            if (isExit) {
+                viewModel.logout()
+                navController.navigate("login_screen") {
+                    popUpTo(navController.currentDestination?.id ?: 0) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
                 }
-                launchSingleTop = true
+            } else {
+                navController.navigate("settings_screen")
             }
         }) {
             Column {
@@ -118,7 +113,8 @@ fun ScheduleScreen(
                 ) { page ->
 
                     currentDay = shortWeekDays[page]
-                    val lessons = schedule[currentDay].orEmpty().sortedBy { it.time.take(2).toInt() }
+                    val lessons =
+                        schedule[currentDay].orEmpty().sortedBy { it.time.take(2).toInt() }
 
                     Box(modifier = Modifier.fillMaxSize()) {
                         Column(
@@ -136,7 +132,7 @@ fun ScheduleScreen(
                         }
 
                         if (detailsState) {
-                            DetailsCard(currentLesson) { detailsState = false }
+                            DetailsCard(currentLesson, viewModel) { detailsState = false }
                         }
                     }
                 }

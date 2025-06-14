@@ -3,7 +3,7 @@ package com.example.studyhub.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "schedule")
+@Entity(tableName = "schedule_new")
 data class ScheduleEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String?,

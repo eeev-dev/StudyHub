@@ -1,6 +1,5 @@
-package com.example.studyhub.data.local.model
+package com.example.studyhub.ui.model
 
-import com.example.studyhub.data.local.entities.ScheduleEntity
 import com.example.studyhub.data.remote.models.Schedule
 
 data class Lesson(

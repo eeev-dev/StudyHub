@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.studyhub.R
 import com.example.studyhub.ui.theme.sansFont
 import androidx.core.net.toUri
-import com.example.studyhub.data.local.model.Lesson
+import com.example.studyhub.ui.model.Lesson
 
 @Composable
 fun OnlineLesson(

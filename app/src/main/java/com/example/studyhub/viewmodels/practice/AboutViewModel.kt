@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.ScheduleDao
 import com.example.studyhub.data.remote.models.Place
 import com.example.studyhub.data.remote.models.Review
 import com.example.studyhub.data.remote.repository.intern.CompaniesRepository
@@ -25,7 +26,8 @@ class AboutViewModel @Inject constructor(
     private val companiesRepository: CompaniesRepository,
     private val internRepository: InternRepository,
     private val reviewRepository: ReviewRepository,
-    @ApplicationContext private val appContext: Context
+    @ApplicationContext private val appContext: Context,
+    private val scheduleDao: ScheduleDao
 ) : ViewModel() {
 
     var place: Place? = null
@@ -77,6 +79,7 @@ class AboutViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
+            scheduleDao.clearAll()
             dataStoreManager.clearData()
         }
     }

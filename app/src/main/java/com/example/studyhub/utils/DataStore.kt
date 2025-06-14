@@ -10,7 +10,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "ap
 
 object PrefKeys {
     val ID = stringPreferencesKey("student_id")
-    val TERM = stringPreferencesKey("term")
+    val IS_REMIND = stringPreferencesKey("is_remind")
 
     val STATUS = stringPreferencesKey("status")
     val HEAD_TEACHER = stringPreferencesKey("head_teacher")

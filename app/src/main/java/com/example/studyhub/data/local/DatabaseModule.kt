@@ -2,7 +2,10 @@ package com.example.studyhub.data.local
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.studyhub.data.local.dao.PlanDao
+import com.example.studyhub.data.local.dao.ReminderDao
 import com.example.studyhub.data.local.dao.ScheduleDao
 import dagger.Module
 import dagger.Provides
@@ -14,15 +17,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext appContext: Context): AppDatabase {
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
-            "schedule_db"
-        ).build()
+            "studyhub_db"
+        )
+        .build()
     }
 
     @Provides
@@ -30,4 +33,7 @@ object DatabaseModule {
 
     @Provides
     fun providePlanDao(db: AppDatabase): PlanDao = db.planDao()
+
+    @Provides
+    fun provideReminderDao(db: AppDatabase): ReminderDao = db.reminderDao()
 }

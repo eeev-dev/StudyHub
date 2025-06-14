@@ -27,7 +27,8 @@ import kotlin.onSuccess
 class PracticeViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val internRepository: InternRepository,
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val scheduleDao: ScheduleDao
 ) : ViewModel() {
     private val dataStoreManager = DataStoreManager(appContext)
 
@@ -101,6 +102,7 @@ class PracticeViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
+            scheduleDao.clearAll()
             dataStoreManager.clearData()
         }
     }

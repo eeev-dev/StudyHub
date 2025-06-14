@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ScheduleApi {
-    data class ScheduleRequest(val student_id: String, val term: String)
+    data class ScheduleRequest(val student_id: String)
 
     @POST("/api/schedule")
     suspend fun getSchedule(

@@ -16,6 +16,5 @@ interface LoginApi {
 data class LoginResponse(
     val success: Boolean,
     val id: Int?,
-    val term: Int?,
     val message: String
 )

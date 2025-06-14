@@ -37,7 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studyhub.R
-import com.example.studyhub.data.local.model.Lesson
+import com.example.studyhub.ui.model.Lesson
 import com.example.studyhub.ui.theme.sansFont
 
 @OptIn(ExperimentalFoundationApi::class)

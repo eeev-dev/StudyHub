@@ -33,7 +33,7 @@ import com.example.studyhub.ui.theme.sansFont
 fun Appbar(
     text: String,
     extraImageResource: Int,
-    onExit: () -> Unit = {},
+    onExit: (isExit: Boolean) -> Unit = {},
     onMenuClick: () -> Unit
 ) {
     Box(

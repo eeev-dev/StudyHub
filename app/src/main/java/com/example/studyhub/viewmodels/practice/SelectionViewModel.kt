@@ -25,7 +25,8 @@ import javax.inject.Inject
 class SelectionViewModel @Inject constructor(
     private val companiesRepository: CompaniesRepository,
     private val internRepository: InternRepository,
-    @ApplicationContext private val appContext: Context
+    @ApplicationContext private val appContext: Context,
+    private val scheduleDao: ScheduleDao
 ) : ViewModel() {
 
     private val dataStoreManager = DataStoreManager(appContext)
@@ -86,6 +87,7 @@ class SelectionViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
+            scheduleDao.clearAll()
             dataStoreManager.clearData()
         }
     }

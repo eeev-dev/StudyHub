@@ -24,7 +24,7 @@ fun NavShell(
     navController: NavController,
     appBarText: String,
     appBarExtraIconResource: Int = 0,
-    onExit: () -> Unit = {},
+    onExit: (isExit:Boolean) -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)

@@ -25,7 +25,7 @@ import com.example.studyhub.R
 
 @Composable
 fun SettingsMenu(
-    onExit: () -> Unit
+    onExit: (isExit: Boolean) -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     val iconSize = 36.dp
@@ -55,14 +55,14 @@ fun SettingsMenu(
                 text = { Text("Настройки") },
                 onClick = {
                     menuExpanded = false
-                    // обработка
+                    onExit(false)
                 }
             )
             DropdownMenuItem(
                 text = { Text("Выход") },
                 onClick = {
                     menuExpanded = false
-                    onExit()
+                    onExit(true)
                 }
             )
         }

@@ -18,6 +18,7 @@ import com.example.studyhub.ui.screens.VKRScreen
 import com.example.studyhub.ui.screens.practice.AboutScreen
 import com.example.studyhub.ui.screens.practice.LetterScreen
 import com.example.studyhub.ui.screens.practice.SelectionScreen
+import com.example.studyhub.ui.screens.schedule.components.SettingsScreen
 import com.example.studyhub.ui.screens.vkr.SupervisorScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -25,11 +26,13 @@ import com.example.studyhub.ui.screens.vkr.SupervisorScreen
 fun AppNavHost(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "schedule_screen") {
+    NavHost(navController = navController, startDestination = "preview_screen") {
         composable("preview_screen") { PreviewScreen(navController) }
         composable("login_screen") { LoginScreen(navController) }
+        composable("plans_screen") { PlansScreen(navController) }
 
         composable("schedule_screen") { ScheduleScreen(navController) }
+        composable("settings_screen") { SettingsScreen(navController) }
 
         composable("vkr_screen") { VKRScreen(navController) }
         composable("supervisor_screen") { SupervisorScreen(navController) }

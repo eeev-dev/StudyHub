@@ -53,6 +53,9 @@ android {
 val roomVersion = "2.6.1"
 
 dependencies {
+    // Конвертер для напоминаний
+    implementation("com.jakewharton.threetenabp:threetenabp:1.3.1")
+
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.7")
 

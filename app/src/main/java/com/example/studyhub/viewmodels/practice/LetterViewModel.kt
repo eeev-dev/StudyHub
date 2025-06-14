@@ -24,7 +24,8 @@ import kotlin.collections.find
 @HiltViewModel
 class LetterViewModel @Inject constructor(
     private val api: LetterApi,
-    @ApplicationContext private val appContext: Context
+    @ApplicationContext private val appContext: Context,
+    private val scheduleDao: ScheduleDao
 ) : ViewModel() {
     private val dataStoreManager = DataStoreManager(appContext)
 
@@ -75,6 +76,7 @@ class LetterViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
+            scheduleDao.clearAll()
             dataStoreManager.clearData()
         }
     }

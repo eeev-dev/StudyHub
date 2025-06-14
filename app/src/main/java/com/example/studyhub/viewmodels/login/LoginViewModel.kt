@@ -52,7 +52,6 @@ class LoginViewModel @Inject constructor(
                     if (response.id != null) {
                         dataStoreManager.saveAfterLogin(
                             response.id.toString(),
-                            response.term.toString(),
                             true
                         )
                         loginResult = LoginResult.Success(response.message)

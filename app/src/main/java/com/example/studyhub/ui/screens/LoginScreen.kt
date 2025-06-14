@@ -41,7 +41,7 @@ fun LoginScreen(
     var studentId by remember { mutableStateOf("") }
 
     if (viewModel.isLogin) {
-        navController.navigate("vkr_screen") {
+        navController.navigate("schedule_screen") {
             popUpTo(navController.currentDestination?.id ?: 0) {
                 inclusive = true
             }
@@ -86,7 +86,7 @@ fun LoginScreen(
             when (loginResult) {
                 is LoginViewModel.LoginResult.Success -> {
                     LaunchedEffect(Unit) {
-                        navController.navigate("vkr_screen") {
+                        navController.navigate("schedule_screen") {
                             popUpTo(navController.currentDestination?.id ?: 0) {
                                 inclusive = true
                             }
