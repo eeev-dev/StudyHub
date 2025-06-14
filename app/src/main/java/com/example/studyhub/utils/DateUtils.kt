@@ -9,11 +9,11 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getToday() : String {
+fun getToday(): String {
     val today = LocalDate.now()
     val dayOfWeek = today.dayOfWeek
-    val dayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ru"))
-    return dayName.capitalizeFirstLetter()
+    val dayNameShort = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale("ru"))
+    return dayNameShort.capitalizeFirstLetter()
 }
 
 fun String.capitalizeFirstLetter(): String {
@@ -23,4 +23,4 @@ fun String.capitalizeFirstLetter(): String {
 @RequiresApi(Build.VERSION_CODES.O)
 val shortWeekDays = DayOfWeek.values().map {
     it.getDisplayName(TextStyle.SHORT, Locale("ru")).capitalizeFirstLetter()
-}.toList().dropLast(2)
+}.toList().dropLast(1)

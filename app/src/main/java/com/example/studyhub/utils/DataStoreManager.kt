@@ -6,11 +6,17 @@ import kotlinx.coroutines.flow.first
 
 class DataStoreManager(private val context: Context) {
 
-    suspend fun saveAfterLogin(id: String, isLogin: Boolean) {
+    suspend fun saveAfterLogin(id: String, term: String, isLogin: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[PrefKeys.ID] = id
+            prefs[PrefKeys.TERM] = term
             prefs[PrefKeys.IS_LOGIN] = isLogin.toString()
         }
+    }
+
+    suspend fun getTerm(): String {
+        val prefs = context.dataStore.data.first()
+        return prefs[PrefKeys.TERM] ?: ""
     }
 
     suspend fun getId(): Int {
@@ -83,6 +89,7 @@ class DataStoreManager(private val context: Context) {
     suspend fun clearData() {
         context.dataStore.edit { prefs ->
             prefs.remove(PrefKeys.ID)
+            prefs.remove(PrefKeys.TERM)
             prefs.remove(PrefKeys.IS_LOGIN)
             prefs.remove(PrefKeys.PLACE)
             prefs.remove(PrefKeys.HEAD_TEACHER)

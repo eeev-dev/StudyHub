@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.ScheduleDao
 import com.example.studyhub.data.remote.api.intern.InternResponse
 import com.example.studyhub.data.remote.models.Place
 import com.example.studyhub.data.remote.repository.intern.CompaniesRepository

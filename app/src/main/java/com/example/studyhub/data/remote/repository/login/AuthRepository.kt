@@ -6,9 +6,9 @@ import com.example.studyhub.data.remote.api.login.LoginResponse
 
 class AuthRepository(private val api: LoginApi) {
 
-    suspend fun login(studentId: String): Result<LoginResponse> {
+    suspend fun login(studentNumber: String): Result<LoginResponse> {
         return try {
-            val response = api.login(LoginRequest(studentId))
+            val response = api.login(LoginRequest(studentNumber))
             if (response.isSuccessful && response.body() != null) {
                 val body = response.body()!!
                 if (body.success) {

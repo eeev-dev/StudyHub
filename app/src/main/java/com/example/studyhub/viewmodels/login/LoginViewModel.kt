@@ -23,7 +23,10 @@ class LoginViewModel @Inject constructor(
 
     var isLogin by mutableStateOf(false)
 
-    var studentId by mutableStateOf("")
+    var studentNumber by mutableStateOf("")
+        private set
+
+    var term by mutableStateOf("")
         private set
 
     var loginResult by mutableStateOf<LoginResult?>(null)
@@ -31,8 +34,8 @@ class LoginViewModel @Inject constructor(
 
     var message by mutableStateOf("")
 
-    fun onStudentIdChange(newId: String) {
-        studentId = newId
+    fun onStudentNumberChange(new: String) {
+        studentNumber = new
     }
 
     fun getIsLogin() {
@@ -44,11 +47,12 @@ class LoginViewModel @Inject constructor(
     fun login() {
         viewModelScope.launch {
             try {
-                val result = repository.login(studentId)
+                val result = repository.login(studentNumber)
                 result.onSuccess { response ->
                     if (response.id != null) {
                         dataStoreManager.saveAfterLogin(
                             response.id.toString(),
+                            response.term.toString(),
                             true
                         )
                         loginResult = LoginResult.Success(response.message)

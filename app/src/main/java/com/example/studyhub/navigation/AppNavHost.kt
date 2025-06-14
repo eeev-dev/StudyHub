@@ -25,7 +25,7 @@ import com.example.studyhub.ui.screens.vkr.SupervisorScreen
 fun AppNavHost(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "practice_screen") {
+    NavHost(navController = navController, startDestination = "schedule_screen") {
         composable("preview_screen") { PreviewScreen(navController) }
         composable("login_screen") { LoginScreen(navController) }
 

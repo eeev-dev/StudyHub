@@ -26,6 +26,7 @@ data class InternResponse(
     val status: String = "",
     val deadline: String = "",
     val place: String = "",
+    val title: String = "",
     val place_id: Int = -1,
     val head_teacher: String = "",
     val message: String? = null

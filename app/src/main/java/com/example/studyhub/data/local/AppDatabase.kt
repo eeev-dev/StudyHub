@@ -7,7 +7,16 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.studyhub.data.local.dao.PlanDao
+import com.example.studyhub.data.local.dao.ScheduleDao
+import com.example.studyhub.data.local.entities.PlanEntity
+import com.example.studyhub.data.local.entities.ScheduleEntity
 
-class AppDatabase {
-
+@Database(
+    entities = [ScheduleEntity::class, PlanEntity::class],
+    version = 1
+)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun scheduleDao(): ScheduleDao
+    abstract fun planDao(): PlanDao
 }

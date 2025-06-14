@@ -38,7 +38,7 @@ fun PreviewScreen(
 
     if (viewModel.response != null) {
         if (viewModel.isLogin)
-            navController.navigate("practice_screen") {
+            navController.navigate("schedule_screen") {
                 popUpTo(navController.currentDestination?.id ?: 0) {
                     inclusive = true
                 }
@@ -65,16 +65,17 @@ fun PreviewScreen(
         }
         if (viewModel.response == null) {
             if (viewModel.isLogin) {
-                navController.navigate("plans_screen") {
+                navController.navigate("schedule_screen") {
                     popUpTo(navController.currentDestination?.id ?: 0) {
                         inclusive = true
                     }
                     launchSingleTop = true
                 }
+                Toast.makeText(context, "Сервер недоступен", Toast.LENGTH_SHORT).show()
             } else Toast.makeText(context, "Сервер недоступен, попробуйте зайти позже", Toast.LENGTH_SHORT).show()
         } else {
             if (viewModel.isLogin) {
-                navController.navigate("practice_screen") {
+                navController.navigate("schedule_screen") {
                     popUpTo(navController.currentDestination?.id ?: 0) {
                         inclusive = true
                     }

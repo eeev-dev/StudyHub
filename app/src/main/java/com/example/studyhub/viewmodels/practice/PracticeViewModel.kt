@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.ScheduleDao
 import com.example.studyhub.data.remote.api.intern.InternResponse
 import com.example.studyhub.data.remote.api.intern.ReviewResponse
 import com.example.studyhub.data.remote.api.vkr.GraduateResponse
@@ -68,6 +69,7 @@ class PracticeViewModel @Inject constructor(
                 val result = internRepository.getIntern(studentId)
                 result.onSuccess {
                     intern = it
+                    title = intern!!.title
                 }.onFailure {
                     Toast.makeText(
                         appContext,

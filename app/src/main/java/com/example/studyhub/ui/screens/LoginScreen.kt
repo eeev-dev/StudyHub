@@ -66,7 +66,7 @@ fun LoginScreen(
                 value = studentId,
                 onValueChange = {
                     studentId = it
-                    viewModel.onStudentIdChange(it)
+                    viewModel.onStudentNumberChange(it)
                 },
                 label = { Text("Номер студенческого") },
                 modifier = Modifier.fillMaxWidth(),

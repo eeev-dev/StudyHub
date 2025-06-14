@@ -6,6 +6,7 @@ import com.example.studyhub.data.remote.api.intern.LetterApi
 import com.example.studyhub.data.remote.api.intern.ReviewApi
 import com.example.studyhub.data.remote.api.login.LoginApi
 import com.example.studyhub.data.remote.api.login.PingApi
+import com.example.studyhub.data.remote.api.schedule.ScheduleApi
 import com.example.studyhub.data.remote.api.vkr.GraduateApi
 import com.example.studyhub.data.remote.api.vkr.TeacherApi
 import com.example.studyhub.data.remote.models.Review
@@ -14,6 +15,7 @@ import com.example.studyhub.data.remote.repository.intern.InternRepository
 import com.example.studyhub.data.remote.repository.intern.ReviewRepository
 import com.example.studyhub.data.remote.repository.login.AuthRepository
 import com.example.studyhub.data.remote.repository.login.PingRepository
+import com.example.studyhub.data.remote.repository.schedule.ScheduleRepository
 import com.example.studyhub.data.remote.repository.vkr.GraduateRepository
 import com.example.studyhub.data.remote.repository.vkr.TeacherRepository
 import dagger.Module
@@ -127,5 +129,17 @@ object AppModule {
     @Singleton
     fun provideReviewRepository(api: ReviewApi): ReviewRepository {
         return ReviewRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScheduleApi(retrofit: Retrofit): ScheduleApi {
+        return retrofit.create(ScheduleApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScheduleRepository(api: ScheduleApi): ScheduleRepository {
+        return ScheduleRepository(api)
     }
 }
