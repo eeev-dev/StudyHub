@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.ReminderDao
 import com.example.studyhub.data.local.dao.ScheduleDao
 import com.example.studyhub.data.remote.repository.vkr.GraduateRepository
 import com.example.studyhub.data.remote.repository.vkr.TeacherRepository
@@ -24,7 +25,8 @@ class SupervisorViewModel @Inject constructor(
     private val teacherRepository: TeacherRepository,
     private val graduateRepository: GraduateRepository,
     @ApplicationContext private val appContext: Context,
-    private val scheduleDao: ScheduleDao
+    private val scheduleDao: ScheduleDao,
+    private val reminderDao: ReminderDao
 ) : ViewModel() {
 
     private val _teachers = MutableStateFlow<List<String>>(emptyList())
@@ -67,6 +69,7 @@ class SupervisorViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             scheduleDao.clearAll()
+            reminderDao.clearAll()
             dataStoreManager.clearData()
         }
     }

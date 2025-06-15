@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.ReminderDao
 import com.example.studyhub.data.local.dao.ScheduleDao
 import com.example.studyhub.data.remote.api.intern.InternResponse
 import com.example.studyhub.data.remote.api.intern.ReviewResponse
@@ -28,7 +29,8 @@ class PracticeViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val internRepository: InternRepository,
     private val reviewRepository: ReviewRepository,
-    private val scheduleDao: ScheduleDao
+    private val scheduleDao: ScheduleDao,
+    private val reminderDao: ReminderDao
 ) : ViewModel() {
     private val dataStoreManager = DataStoreManager(appContext)
 
@@ -103,6 +105,7 @@ class PracticeViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             scheduleDao.clearAll()
+            reminderDao.clearAll()
             dataStoreManager.clearData()
         }
     }

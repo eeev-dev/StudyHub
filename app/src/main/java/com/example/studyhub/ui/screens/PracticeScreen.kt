@@ -136,13 +136,17 @@ fun PracticeScreen(
 
     val isRefreshing = viewModel.isRefreshing.value
 
-    NavShell(navController, "Практика", onExit = {
-        viewModel.logout()
-        navController.navigate("login_screen") {
-            popUpTo(navController.currentDestination?.id ?: 0) {
-                inclusive = true
+    NavShell(navController, "Практика", onExit = { isExit ->
+        if (isExit) {
+            viewModel.logout()
+            navController.navigate("login_screen") {
+                popUpTo(navController.currentDestination?.id ?: 0) {
+                    inclusive = true
+                }
+                launchSingleTop = true
             }
-            launchSingleTop = true
+        } else {
+            navController.navigate("settings_screen")
         }
     }) {
         SwipeRefresh(

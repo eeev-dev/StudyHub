@@ -201,6 +201,7 @@ class SettingsViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             scheduleDao.clearAll()
+            reminderDao.clearAll()
             dataStoreManager.clearData()
         }
     }

@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.ReminderDao
 import com.example.studyhub.data.local.dao.ScheduleDao
 import com.example.studyhub.data.remote.api.vkr.GraduateResponse
 import com.example.studyhub.data.remote.repository.vkr.GraduateRepository
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class VkrViewModel @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val repository: GraduateRepository,
+    private val reminderDao: ReminderDao,
     private val scheduleDao: ScheduleDao
 ) : ViewModel() {
     private val dataStoreManager = DataStoreManager(appContext)
@@ -123,6 +125,7 @@ class VkrViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             scheduleDao.clearAll()
+            reminderDao.clearAll()
             dataStoreManager.clearData()
         }
     }

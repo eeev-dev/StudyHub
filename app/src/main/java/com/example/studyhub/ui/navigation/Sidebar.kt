@@ -44,7 +44,7 @@ fun DrawerContent(
         Spacer(modifier = Modifier.height(20.dp).fillMaxWidth())
 
         DrawerItem("Расписание", Icons.Default.DateRange) { onItemSelected("schedule_screen") }
-        DrawerItem("Планы", Icons.Default.Home) { onItemSelected("homework_screen") }
+        DrawerItem("Планы", Icons.Default.Home) { onItemSelected("plans_screen") }
         DrawerItem("Экзамены", Icons.Default.Done) { onItemSelected("exams_screen") }
         DrawerItem("Практика", Icons.Default.Email) { onItemSelected("practice_screen") }
         DrawerItem("ВКР", Icons.Default.List) { onItemSelected("vkr_screen") }

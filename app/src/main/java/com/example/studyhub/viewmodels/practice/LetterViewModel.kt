@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.ReminderDao
 import com.example.studyhub.data.local.dao.ScheduleDao
 import com.example.studyhub.data.remote.api.intern.InternResponse
 import com.example.studyhub.data.remote.api.intern.LetterApi
@@ -25,7 +26,8 @@ import kotlin.collections.find
 class LetterViewModel @Inject constructor(
     private val api: LetterApi,
     @ApplicationContext private val appContext: Context,
-    private val scheduleDao: ScheduleDao
+    private val scheduleDao: ScheduleDao,
+    private val reminderDao: ReminderDao
 ) : ViewModel() {
     private val dataStoreManager = DataStoreManager(appContext)
 
@@ -77,6 +79,7 @@ class LetterViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             scheduleDao.clearAll()
+            reminderDao.clearAll()
             dataStoreManager.clearData()
         }
     }

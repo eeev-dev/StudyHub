@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -22,10 +23,12 @@ fun parseDeadlineToLocalDate(deadlineStr: String): LocalDate {
     return zonedDateTime.toLocalDate()
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun formatDateRussian(date: LocalDate): String {
-    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru"))
-    return date.format(formatter) + " год"
+fun formatDateRussian(inputDate: String): String {
+    val inputFormat = SimpleDateFormat("dd.MM.yyyy", Locale("ru"))
+    val outputFormat = SimpleDateFormat("dd MMM yyyy 'г.'", Locale("ru"))
+
+    val date = inputFormat.parse(inputDate) ?: return inputDate
+    return outputFormat.format(date)
 }
 
 fun formatDate(input: String): String {
@@ -72,5 +75,17 @@ fun convertGmtToLocal(gmtDateString: String): String {
     } catch (e: Exception) {
         println("Ошибка парсинга: ${e}")
         "Неверная дата"
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getWeekday(dateString: String): String {
+    return try {
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        val date = LocalDate.parse(dateString, formatter)
+        val dayOfWeek = date.dayOfWeek
+        dayOfWeek.getDisplayName(TextStyle.SHORT, Locale("ru"))
+    } catch (e: Exception) {
+        ""
     }
 }

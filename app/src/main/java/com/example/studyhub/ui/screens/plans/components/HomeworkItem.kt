@@ -1,6 +1,10 @@
 package com.example.studyhub.ui.screens.plans.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -12,21 +16,33 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.studyhub.R
+import com.example.studyhub.data.local.entities.PlanEntity
 import com.example.studyhub.ui.theme.sansFont
+import com.example.studyhub.utils.formatDateRussian
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayItem(day: String) {
+fun DayItem(
+    day: String,
+    plans: List<PlanEntity>,
+    navController: NavController
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.height(IntrinsicSize.Min).padding(bottom = 15.dp)
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .padding(bottom = 12.dp)
     ) {
         Box(
             modifier = Modifier
@@ -39,39 +55,54 @@ fun DayItem(day: String) {
                 text = day,
                 fontFamily = sansFont,
                 fontSize = 20.sp,
-                modifier = Modifier.align(Alignment.Center).padding(horizontal = 4.dp),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(horizontal = 4.dp),
                 color = Color.White
             )
         }
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            HomeworkItem(
-                "С̶Р̶С̶",
-                "✓ Завершено за 11 дек.",
-                "Информатика"
-            )
-            HomeworkItem(
-                "ЛАБ4: Массивы",
-                "\uD83D\uDD52 11 дек. 2025 г.",
-                "Программирование"
-            )
+            plans.forEach { plan ->
+                HomeworkItem(plan) {
+                    navController.navigate("update_screen/${plan.id}")
+                }
+            }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeworkItem(
-    title: String,
-    status: String,
-    subject: String
+    plan: PlanEntity,
+    onItemClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(vertical = 10.dp)
+        modifier = Modifier
+            .padding(vertical = 10.dp)
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onItemClick
+            )
     ) {
-        CustomText(title)
-        CustomText(status)
-        CustomText(subject)
+        if (plan.isFinished) {
+            Text(
+                text = plan.content,
+                fontFamily = sansFont,
+                fontSize = 20.sp,
+                textDecoration = TextDecoration.LineThrough,
+                modifier = Modifier.padding(start = 5.dp),
+                color = Color.Black
+            )
+            CustomText("✓ ${formatDateRussian(plan.deadline.toString())}")
+        } else {
+            CustomText(plan.content)
+            CustomText("\uD83D\uDD52 ${formatDateRussian(plan.deadline.toString())}")
+        }
+        CustomText(plan.title)
     }
 }
 

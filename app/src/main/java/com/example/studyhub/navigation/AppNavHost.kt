@@ -15,6 +15,8 @@ import com.example.studyhub.ui.screens.PracticeScreen
 import com.example.studyhub.ui.screens.PreviewScreen
 import com.example.studyhub.ui.screens.ScheduleScreen
 import com.example.studyhub.ui.screens.VKRScreen
+import com.example.studyhub.ui.screens.plans.InsertPlanScreen
+import com.example.studyhub.ui.screens.plans.UpdatePlanScreen
 import com.example.studyhub.ui.screens.practice.AboutScreen
 import com.example.studyhub.ui.screens.practice.LetterScreen
 import com.example.studyhub.ui.screens.practice.SelectionScreen
@@ -29,7 +31,16 @@ fun AppNavHost(
     NavHost(navController = navController, startDestination = "preview_screen") {
         composable("preview_screen") { PreviewScreen(navController) }
         composable("login_screen") { LoginScreen(navController) }
+
         composable("plans_screen") { PlansScreen(navController) }
+        composable("insert_screen") { InsertPlanScreen(navController) }
+        composable(
+            "update_screen/{planId}",
+            arguments = listOf(navArgument("planId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val planId = backStackEntry.arguments?.getInt("planId") ?: 0
+            UpdatePlanScreen(navController, planId)
+        }
 
         composable("schedule_screen") { ScheduleScreen(navController) }
         composable("settings_screen") { SettingsScreen(navController) }
@@ -47,8 +58,6 @@ fun AppNavHost(
             AboutScreen(navController, placeId)
         }
         composable("letter_screen") { LetterScreen(navController) }
-
-        composable("homework_screen") { PlansScreen(navController) }
 
         composable("exams_screen") { ExamsScreen(navController) }
     }

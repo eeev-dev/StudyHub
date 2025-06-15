@@ -58,13 +58,17 @@ fun SettingsScreen(
 
     val developerEmail = "eeev07245@gmail.com"
 
-    NavShell(navController, "Настройки", onExit = {
-        viewModel.logout()
-        navController.navigate("login_screen") {
-            popUpTo(navController.currentDestination?.id ?: 0) {
-                inclusive = true
+    NavShell(navController, "Настройки", onExit = { isExit ->
+        if (isExit) {
+            viewModel.logout()
+            navController.navigate("login_screen") {
+                popUpTo(navController.currentDestination?.id ?: 0) {
+                    inclusive = true
+                }
+                launchSingleTop = true
             }
-            launchSingleTop = true
+        } else {
+            navController.navigate("settings_screen")
         }
     }) {
         if (notificationsEnabled != null) {
