@@ -5,6 +5,8 @@
         name="cache"
         path="." />
 
+    <files-path name="files" path="." />
+
     <!-- Доступ к общей папке Загрузки -->
     <external-path
         name="downloads"

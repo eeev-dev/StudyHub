@@ -1,5 +1,6 @@
 package com.example.studyhub.data.remote
 
+import com.example.studyhub.data.remote.api.exam.ExamApi
 import com.example.studyhub.data.remote.api.intern.CompanyApi
 import com.example.studyhub.data.remote.api.intern.InternApi
 import com.example.studyhub.data.remote.api.intern.LetterApi
@@ -141,5 +142,11 @@ object AppModule {
     @Singleton
     fun provideScheduleRepository(api: ScheduleApi): ScheduleRepository {
         return ScheduleRepository(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExamApi(retrofit: Retrofit): ExamApi {
+        return retrofit.create(ExamApi::class.java)
     }
 }

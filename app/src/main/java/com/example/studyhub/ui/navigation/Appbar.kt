@@ -32,7 +32,7 @@ import com.example.studyhub.ui.theme.sansFont
 @Composable
 fun Appbar(
     text: String,
-    extraImageResource: Int,
+    ExtraIcon: @Composable () -> Unit = {},
     onExit: (isExit: Boolean) -> Unit = {},
     onMenuClick: () -> Unit
 ) {
@@ -73,7 +73,7 @@ fun Appbar(
                     .height(36.dp)
                     .width(36.dp)
                     .weight(1f)
-            ) { AppBarExtraIcon(extraImageResource) }
+            ) { ExtraIcon() }
             SettingsMenu(onExit)
         }
     }

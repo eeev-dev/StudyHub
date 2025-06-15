@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 fun NavShell(
     navController: NavController,
     appBarText: String,
-    appBarExtraIconResource: Int = 0,
+    appBarExtraIcon: @Composable () -> Unit = {},
     onExit: (isExit:Boolean) -> Unit = {},
     content: @Composable () -> Unit,
 ) {
@@ -57,7 +57,7 @@ fun NavShell(
 
         Scaffold(
             topBar = {
-                Appbar(appBarText, appBarExtraIconResource, onExit = onExit) { scope.launch { drawerState.open() } }
+                Appbar(appBarText, appBarExtraIcon, onExit = onExit) { scope.launch { drawerState.open() } }
             },
             content = { padding ->
                 Box(
