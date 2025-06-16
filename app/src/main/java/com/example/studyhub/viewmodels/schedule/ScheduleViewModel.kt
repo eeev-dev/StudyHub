@@ -6,19 +6,23 @@ import android.app.AlarmManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.studyhub.data.local.dao.PlanDao
 import com.example.studyhub.data.local.dao.ReminderDao
 import com.example.studyhub.reminder.Utils
 import com.example.studyhub.data.local.dao.ScheduleDao
+import com.example.studyhub.data.local.entities.PlanEntity
 import com.example.studyhub.data.local.entities.ReminderEntity
 import com.example.studyhub.data.remote.models.Schedule
 import com.example.studyhub.data.remote.repository.schedule.ScheduleRepository
 import com.example.studyhub.utils.DataStoreManager
+import com.example.studyhub.utils.getNearestWeekdayDate
 import com.example.studyhub.utils.toEntity
 import com.example.studyhub.utils.toSchedule
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +40,7 @@ import kotlin.String
 class ScheduleViewModel @Inject constructor(
     private val scheduleDao: ScheduleDao,
     private val reminderDao: ReminderDao,
+    private val planDao: PlanDao,
     private val repository: ScheduleRepository,
     private val alarmManager: AlarmManager,
     @ApplicationContext private val appContext: Context
@@ -93,16 +98,17 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
-    fun addPlan(title: String, content: String) {
-        /*val plan = PlanEntity(
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun addPlan(title: String, content: String, day: String) {
+
+        val plan = PlanEntity(
             title = title,
             content = content,
-            deadline = ,
-            isFinished = false
+            deadline = getNearestWeekdayDate(day).toString()
         )
         viewModelScope.launch {
             planDao.insert(plan)
-        }*/
+        }
     }
 
     private fun fetchSchedule() {

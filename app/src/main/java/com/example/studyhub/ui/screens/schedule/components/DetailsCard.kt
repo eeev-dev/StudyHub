@@ -1,5 +1,7 @@
 package com.example.studyhub.ui.screens.schedule.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -45,9 +47,11 @@ import com.example.studyhub.ui.model.Lesson
 import com.example.studyhub.ui.theme.sansFont
 import com.example.studyhub.viewmodels.schedule.ScheduleViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DetailsCard(
     lesson: Lesson,
+    day: String,
     viewModel: ScheduleViewModel,
     onClose: () -> Unit
 ) {
@@ -125,10 +129,14 @@ fun DetailsCard(
                                 label = { Text("Записать задание") },
                                 modifier = Modifier.fillMaxWidth().weight(1f),
                                 trailingIcon = {
-                                    IconButton(onClick = { }) {
+                                    IconButton(onClick = {
+                                        viewModel.addPlan("${lesson.title} ${lesson.type}", text, day)
+                                        onClose()
+                                        text = ""
+                                    }) {
                                         Icon(
                                             imageVector = Icons.Filled.AddCircle,
-                                            contentDescription = "Вставить из буфера"
+                                            contentDescription = "Добавить запись"
                                         )
                                     }
                                 },
@@ -139,7 +147,9 @@ fun DetailsCard(
                                     unfocusedLabelColor = colorResource(R.color.background_grey),
                                     cursorColor = Color.White,
                                     unfocusedTrailingIconColor = colorResource(R.color.background_grey),
-                                    focusedTrailingIconColor = Color.White
+                                    focusedTrailingIconColor = Color.White,
+                                    focusedTextColor = Color.White,
+                                    unfocusedTextColor = Color.White
                                 )
                             )
                         }

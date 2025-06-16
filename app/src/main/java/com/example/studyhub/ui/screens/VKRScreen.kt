@@ -85,9 +85,11 @@ fun VKRScreen(
             state = rememberSwipeRefreshState(isRefreshing),
             onRefresh = { viewModel.refresh() }
         ) {
-            if (viewModel.graduate == null && viewModel.saved == null) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+            if (viewModel.saved == null) {
+                if (viewModel.graduate == null) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
                 }
             } else {
                 Box(

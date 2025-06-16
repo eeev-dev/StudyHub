@@ -113,8 +113,7 @@ fun ScheduleScreen(
                 ) { page ->
 
                     currentDay = shortWeekDays[page]
-                    val lessons =
-                        schedule[currentDay].orEmpty().sortedBy { it.time.take(2).toInt() }
+                    val lessons = schedule[currentDay].orEmpty().sortedBy { it.time.take(2).toInt() }
 
                     Box(modifier = Modifier.fillMaxSize()) {
                         Column(
@@ -132,7 +131,7 @@ fun ScheduleScreen(
                         }
 
                         if (detailsState) {
-                            DetailsCard(currentLesson, viewModel) { detailsState = false }
+                            DetailsCard(currentLesson, currentDay, viewModel) { detailsState = false }
                         }
                     }
                 }

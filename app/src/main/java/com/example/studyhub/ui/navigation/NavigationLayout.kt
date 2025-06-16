@@ -38,7 +38,7 @@ fun NavShell(
             DrawerContent { selected ->
                 when (selected) {
                     "schedule_screen" -> navController.navigate(selected)
-                    "homework_screen" -> navController.navigate(selected)
+                    "plans_screen" -> navController.navigate(selected)
                     "exams_screen" -> navController.navigate(selected)
                     "practice_screen" -> navController.navigate(selected)
                     "vkr_screen" -> navController.navigate(selected)

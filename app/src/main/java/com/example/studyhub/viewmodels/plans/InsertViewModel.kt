@@ -23,15 +23,4 @@ class InsertViewModel @Inject constructor(
     fun addPlan(plan: PlanEntity) {
         viewModelScope.launch { planDao.insert(plan) }
     }
-
-    fun deletePlan(plan: PlanEntity) {
-        viewModelScope.launch { planDao.delete(plan) }
-    }
-
-    fun completePlan(plan: PlanEntity) {
-        viewModelScope.launch {
-            val updatedPlan = plan.copy(isFinished = true)
-            planDao.insert(updatedPlan)
-        }
-    }
 }
